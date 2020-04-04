@@ -1,0 +1,78 @@
+from list_node import Node
+
+
+class DLL:
+    def __init__(self, node=None):
+        self.head = node
+        self.tail = node
+        self.length = 1 if node is not None else 0
+
+    def __len__(self):
+        return self.length
+
+    def add_to_head(self, value):
+        new_node = Node(value)
+        self.length += 1
+        if not self.head and not self.tail:
+            self.head = new_node
+            self.tail = new_node
+        else:
+            new_node.next_node = self.head
+            self.head.prev_node = new_node
+            self.head = new_node
+
+    def remove_from_head(self):
+        value = self.head.value
+        self.delete(self.head)
+        return value
+
+    def add_to_tail(self, value):
+        new_node = Node(value)
+        self.length += 1
+        if not self.head and not self.tail:
+            self.head = new_node
+            self.tail = new_node
+        else:
+            new_node.prev_node = self.tail
+            self.tail.next_node = new_node
+            self.tail = new_node
+
+    def remove_from_tail(self):
+        value = self.tail.value
+        self.delete(self.tail)
+        return value
+
+    def move_to_front(self, node):
+        value = node.value
+        self.delete(node)
+        self.add_to_head(value)
+
+    def move_to_end(self, node):
+        value = node.value
+        self.delete(node)
+        self.add_to_tail(value)
+
+    def delete(self, node):
+        self.length -= 1
+        if self.head is self.tail:
+            self.head = None
+            self.tail = None
+        elif node is self.head:
+            self.head = self.head.next_node
+            node.delete()
+        elif node is self.tail:
+            self.tail = self.tail.prev_node
+            node.delete()
+        else:
+            node.delete()
+
+    def get_max(self):
+        if not self.head:
+            return None
+        max_value = self.head.value
+        current = self.head
+        while current.next_node is not None:
+            if current.value > max_value:
+                max_value = current.value
+            current = current.next_node
+        return max_value
